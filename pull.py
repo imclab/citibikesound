@@ -14,8 +14,7 @@ TODO: make bucket
 """
 
 import time, os
-from housepy import config, log, net
-from s3_mp_upload import main
+from housepy import config, log, net, s3
 
 ENDPOINT = "http://appservices.citibikenyc.com/data2/stations.php"
 
@@ -32,7 +31,7 @@ except Exception as e:
 log.info("got %s, pushing..." % filename)    
 
 try:
-    main(filename, filename)
+    s3.upload(filename)
 except Exception as e:
     log.error(log.exc(e))
     exit()

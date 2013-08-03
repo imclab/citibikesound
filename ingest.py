@@ -15,7 +15,7 @@ ok, so this can pull the endpoints directly
 """
 
 from housepy import config, log, net
-import json, sys, model, os
+import json, sys, model, os, time
 
 ENDPOINT = "http://appservices.citibikenyc.com/data2/stations.php"
 

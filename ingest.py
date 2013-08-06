@@ -18,6 +18,7 @@ from housepy import config, log, net
 import json, sys, model, os, time
 
 ENDPOINT = "http://appservices.citibikenyc.com/data2/stations.php"
+LOOKUP = "http://api.geonames.org/findNearbyPostalCodesJSON"
 
 def handle(t, data):
     stations = model.fetch_stations()
@@ -25,7 +26,9 @@ def handle(t, data):
     for s in data['results']:
         try:
             if s['id'] not in stations:
-                model.insert_station(s['id'], s['longitude'], s['latitude'], t, s['availableBikes'])
+                data = json.loads(net.read(LOOKUP, {'lat': s['latitude'], 'lng': s['longitude'], 'username': "h0use"}))
+                zipcode = data['postalCodes'][0]['postalCode']
+                model.insert_station(s['id'], s['longitude'], s['latitude'], zipcode, t, s['availableBikes'])
                 continue
             station = stations[s['id']]
             if s['availableBikes'] != station['bikes'] and t > station['t']:
@@ -34,7 +37,6 @@ def handle(t, data):
                 events[s['id']] = s['availableBikes'] - station['bikes']
         except Exception as e:
             log.error(log.exc(e))
-            print(station)
     model.insert_beat(t, events)
 
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+    body {
+        background-color: black;
+        margin: 0px;
+        padding: 0px;
+    }
+    #bikemap {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        background-color: #fff;
+    }
+</style>    
+<script type="text/javascript" src="/static/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="/static/js/paper-full.min.js"></script>
+<script type="text/paperscript" canvas="bikemap">
+    
+    $(document).ready(function() {                   
+
+        $.getJSON("/stations", function(data) {
+            $.each(data, function(key, value) {
+                // console.log(value);
+                var path = new Path.Circle({
+                    center: [500 * value[0], 500 * value[1]],
+                    radius: 3,
+                    strokeColor: null,
+                    fillColor: 'black'
+                });
+                // var path = new Path.Star({
+                //     center: [500 * value[0], 500 * value[1]],
+                //     radius1: 1,
+                //     radius2: 5,
+                //     points: 5,
+                //     strokeColor: null,
+                //     fillColor: 'black'
+                // });
+            });
+        });
+
+    });        
+</script>
+</head>
+<body>
+    <canvas id="bikemap"></canvas>
+</body>
+</html>
